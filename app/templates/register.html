@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Register</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+  <h1>Register</h1>
+
+  {% if errors %}
+    <div class="error-box">
+      <strong>入力に問題があります：</strong>
+      <ul>
+        {% for error in errors %}
+          <li>{{ error }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="flash-message">
+        {% for message in messages %}
+          <p>{{ message }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <form method="POST" action="/register">
+    <!-- 試薬名 -->
+    <label for="name">試薬名:</label>
+    <input type="text" name="name" id="name" value="{{ request.form.get('name', '') }}" required>
+
+    <!-- 試薬番号 -->
+    <label for="code_prefix">試薬番号:</label>
+    <div class="shelf-group">
+      <select id="code_prefix" name="code_prefix" required>
+        <option value="A" {% if request.form.get('code_prefix') == 'A' %}selected{% endif %}>A : 無機塩(主にNa塩)</option>
+        <option value="B" {% if request.form.get('code_prefix') == 'B' %}selected{% endif %}>B : 無機塩(主にK塩)</option>
+        <option value="C" {% if request.form.get('code_prefix') == 'C' %}selected{% endif %}>C : 無機塩(主にLi塩)</option>
+        <option value="D" {% if request.form.get('code_prefix') == 'D' %}selected{% endif %}>D : アルデヒド</option>
+        <option value="E" {% if request.form.get('code_prefix') == 'E' %}selected{% endif %}>E : ケトン</option>
+        <option value="F" {% if request.form.get('code_prefix') == 'F' %}selected{% endif %}>F : アルコール</option>
+        <option value="G" {% if request.form.get('code_prefix') == 'G' %}selected{% endif %}>G : フェノール</option>
+        <option value="H" {% if request.form.get('code_prefix') == 'H' %}selected{% endif %}>H : エーテル</option>
+        <option value="I" {% if request.form.get('code_prefix') == 'I' %}selected{% endif %}>I : エステル</option>
+        <option value="J" {% if request.form.get('code_prefix') == 'J' %}selected{% endif %}>J : 炭化水素</option>
+        <option value="K" {% if request.form.get('code_prefix') == 'K' %}selected{% endif %}>K : 有機塩</option>
+        <option value="L" {% if request.form.get('code_prefix') == 'L' %}selected{% endif %}>L : ハロゲン化物</option>
+        <option value="M" {% if request.form.get('code_prefix') == 'M' %}selected{% endif %}>M : 酸無水物</option>
+        <option value="N" {% if request.form.get('code_prefix') == 'N' %}selected{% endif %}>N : カルボン酸</option>
+        <option value="O" {% if request.form.get('code_prefix') == 'O' %}selected{% endif %}>O : アミン</option>
+        <option value="P" {% if request.form.get('code_prefix') == 'P' %}selected{% endif %}>P : アミド</option>
+        <option value="Q" {% if request.form.get('code_prefix') == 'Q' %}selected{% endif %}>Q : ピリジン</option>
+        <option value="R" {% if request.form.get('code_prefix') == 'R' %}selected{% endif %}>R : 含窒素化合物</option>
+        <option value="S" {% if request.form.get('code_prefix') == 'S' %}selected{% endif %}>S</option>
+        <option value="T" {% if request.form.get('code_prefix') == 'T' %}selected{% endif %}>T : 金属錯体</option>
+        <option value="U" {% if request.form.get('code_prefix') == 'U' %}selected{% endif %}>U : 金属ヒドリド</option>
+        <option value="V" {% if request.form.get('code_prefix') == 'V' %}selected{% endif %}>V : リン化合物</option>
+        <option value="W" {% if request.form.get('code_prefix') == 'W' %}selected{% endif %}>W : 硫黄化合物</option>
+        <option value="X" {% if request.form.get('code_prefix') == 'X' %}selected{% endif %}>X : ホウ素化合物</option>
+        <option value="Y" {% if request.form.get('code_prefix') == 'Y' %}selected{% endif %}>Y : ケイ素化合物</option>
+        <option value="Z" {% if request.form.get('code_prefix') == 'Z' %}selected{% endif %}>Z : その他</option>
+      </select>
+      <input type="number" name="code_number" id="reagent_number" min="0" placeholder="番号" value="{{ request.form.get('code_number', '') }}" required> <!--requiredの代わりにreadonly {{ request.form.get('code_number', '') }}は削除-->
+    </div>
+
+    <!-- 棚番号の種類 -->
+    <label>棚番号の種類:</label>
+    <div class="radio-group">
+      <label>
+        <input type="radio" name="location_type" value="numeric" 
+          {% if request.form.get('location_type', 'numeric') == 'numeric' %}checked{% endif %} 
+          onchange="toggleLocationFields()">
+        数字形式
+      </label>
+      <label>
+        <input type="radio" name="location_type" value="preset" 
+          {% if request.form.get('location_type') == 'preset' %}checked{% endif %}
+          onchange="toggleLocationFields()">
+        特定棚
+      </label>
+    </div>
+
+    <!-- 棚番号（数字） -->
+    <div id="numeric_location">
+      <label>棚番号:</label>
+      <div class="shelf-group" style="align-items: center;">
+        <input type="number" name="location_row" id="location_row" placeholder="番号" min="1" value="{{ request.form.get('location_row', '') }}">
+        <span style="font-weight: bold;">-</span>
+        <input type="number" name="location_col" id="location_col" placeholder="番号" min="0" value="{{ request.form.get('location_col', '') }}">
+      </div>
+    </div>
+
+    <!-- 棚番号（指定棚） -->
+    <div id="preset_location" class="hidden">
+      <label for="preset_location">棚番号（場所）:</label>
+      <select name="preset_location" id="shelf">
+        <option value="劇物庫" {% if request.form.get('preset_location') == '劇物庫' %}selected{% endif %}>劇物庫</option>
+        <option value="毒物庫" {% if request.form.get('preset_location') == '毒物庫' %}selected{% endif %}>毒物庫</option>
+        <option value="冷蔵庫" {% if request.form.get('preset_location') == '冷蔵庫' %}selected{% endif %}>冷蔵庫</option>
+        <option value="冷凍庫" {% if request.form.get('preset_location') == '冷凍庫' %}selected{% endif %}>冷凍庫</option>
+        <option value="Oの棚" {% if request.form.get('preset_location') == 'Oの棚' %}selected{% endif %}>Oの棚</option>
+        <option value="Pの棚" {% if request.form.get('preset_location') == 'Pの棚' %}selected{% endif %}>Pの棚</option>
+        <option value="Qの棚" {% if request.form.get('preset_location') == 'Qの棚' %}selected{% endif %}>Qの棚</option>
+        <option value="Rの棚" {% if request.form.get('preset_location') == 'Rの棚' %}selected{% endif %}>Rの棚</option>
+        <option value="Tの棚" {% if request.form.get('preset_location') == 'Tの棚' %}selected{% endif %}>Tの棚</option>
+        <option value="Vの棚" {% if request.form.get('preset_location') == 'Vの棚' %}selected{% endif %}>Vの棚</option>
+        <option value="Wの棚" {% if request.form.get('preset_location') == 'Wの棚' %}selected{% endif %}>Wの棚</option>
+        <option value="Xの棚" {% if request.form.get('preset_location') == 'Xの棚' %}selected{% endif %}>Xの棚</option>
+        <option value="Yの棚" {% if request.form.get('preset_location') == 'Yの棚' %}selected{% endif %}>Yの棚</option>
+        <option value="デシケーター" {% if request.form.get('preset_location') == 'デシケーター' %}selected{% endif %}>デシケーター</option>
+        <option value="その他" {% if request.form.get('preset_location') == 'その他' %}selected{% endif %}>その他</option>
+      </select>
+    </div>
+
+    <!-- 容量 -->
+    <label for="volume">容量:</label>
+    <div class="shelf-group">
+      <input type="number" name="volume" id="volume" min="0" placeholder="数" value="{{ request.form.get('volume', '') }}" required>
+      <select name="volume_unit" id="volume_unit">
+        <option value="g" {% if request.form.get('volume_unit') == 'g' %}selected{% endif %}>g</option>
+        <option value="mL" {% if request.form.get('volume_unit') == 'mL' %}selected{% endif %}>mL</option>
+      </select>
+    </div>
+
+    <!-- 分子式 -->
+    <label>分子式:</label>
+    <div id="formula_fields">
+      {% for el, cnt in zipped_formula %}
+        <div class="shelf-group">
+          <input type="text" name="elements[]" class="elements" value="{{ el }}" placeholder="元素 (例: C)">
+          <input type="number" name="counts[]" class="number" value="{{ cnt }}" placeholder="数字" min="1">
+        </div>
+      {% endfor %}
+      {% if elements|length == 0 %}
+        <!-- 初期表示用の空欄 -->
+        <div class="shelf-group">
+          <input type="text" name="elements[]" class="elements" placeholder="元素 (例: C)" required>
+          <input type="number" name="counts[]" class="number" placeholder="数" min="1" required>
+        </div>
+      {% endif %}
+    </div>
+    <button type="button" onclick="addElement()">＋元素を追加</button>
+
+    <!-- 試薬会社 -->
+    <label for="company">試薬会社:</label>
+    <select name="company" id="company">
+      <option value="TCI" {% if request.form.get('company') == 'TCI' %}selected{% endif %}>TCI</option>
+      <option value="Wako"  {% if request.form.get('company') == 'Wako' %}selected{% endif %}>Wako</option>
+      <option value="Aldrich"  {% if request.form.get('company') == 'Aldrich' %}selected{% endif %}>Aldrich</option>
+      <option value="その他"  {% if request.form.get('company') == 'その他' %}selected{% endif %}>その他</option>
+    </select>
+
+    <!-- 登録者名 -->
+    <label for="registrant">登録者名:</label>
+    <input type="text" name="registrant" id="registrant" value="{{ request.form.get('registrant', '') }}">
+
+    <!-- 登録ボタン -->
+    <div style="margin-top: 10px;">
+      <input type="submit" value="登録">
+    </div>
+    
+  </form>
+
+  <div class="button-container">
+    <a href="{{ url_for('main.main') }}">
+      <button type="button">戻る</button>
+    </a>
+  </div>
+
+  <script>
+    function toggleLocationFields() {
+      const type = document.querySelector('input[name="location_type"]:checked').value;
+      document.getElementById("numeric_location").classList.toggle("hidden", type !== "numeric");
+      document.getElementById("preset_location").classList.toggle("hidden", type !== "preset");
+    }
+
+    window.onload = toggleLocationFields;
+
+    function addElement() {
+      const div = document.createElement("div");
+      div.className = "shelf-group";
+      div.innerHTML = `
+        <input type="text" name="elements[]" class="elements" placeholder="元素 (例: C)">
+        <input type="number" name="counts[]" class="number" placeholder="数" min="1">
+      `;
+      document.getElementById("formula_fields").appendChild(div);
+    }
+
+    /*
+    document.getElementById("code_prefix").addEventListener("change", function() {
+      const prefix = this.value;
+      fetch(`/api/get_next_code_number?prefix=${prefix}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.next_number !== null) {
+            document.getElementById("reagent_number").value = data.next_number;
+          }
+        })
+        .catch(error => {
+          console.error("番号取得エラー:", error);
+        });
+    });
+
+    // ページロード時にも初期値をセットしたい場合は次を追加
+    window.addEventListener("load", function() {
+      const prefix = document.getElementById("code_prefix").value;
+      if (prefix) {
+        // 上記と同じfetch処理を呼ぶ
+        fetch(`/api/get_next_code_number?prefix=${prefix}`)
+          .then(response => response.json())
+          .then(data => {
+            if (data.next_number !== null) {
+              document.getElementById("reagent_number").value = data.next_number;
+            }
+          });
+      }
+    });
+    */
+  </script>
+</body>
+</html>

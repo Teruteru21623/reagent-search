@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Results</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for message in messages %}
+        <div class="success">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+<div class="result-container">
+  <h2>Results</h2>
+
+  {% if results %}
+    <table>
+      <thead>
+        <tr>
+          <th>試薬番号</th>
+          <th>試薬名</th>
+          <th>棚番号</th>
+          <th>分子式</th>
+          <th>容量</th>
+          <th>試薬会社</th>
+          <th>登録者名</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for reagent in results %}
+        <tr>
+          <td>{{ reagent.code }}</td>
+          <td>
+            <a href="https://www.google.com/search?q={{ reagent.name | urlencode }}" target="_blank" rel="noopener noreferrer">
+              {{ reagent.name }}
+            </a>
+          </td>
+          <td>{{ reagent.location }}</td>
+          <td>{{ reagent.formula | formula | safe }}</td>
+          <td>{{ reagent.volume }}</td>
+          <td>{{ reagent.company }}</td>
+          <td>{{ reagent.registrant }}</td>
+          <td>
+            <form action="{{ url_for('register.delete_reagent', reagent_id=reagent.id) }}" method="POST" class="inline-form">
+              <button type="submit" class="delete-button" onclick="return confirm('本当に削除しますか？');">削除</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="no-result">該当する試薬は見つかりませんでした。</p>
+  {% endif %}
+
+  <div class="button-container">
+    <a href="{{ url_for('main.main') }}">
+      <button type="button">戻る</button>
+    </a>
+  </div>
+</div>
+
+</body>
+</html>

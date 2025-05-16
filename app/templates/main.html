@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Reagent Search</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <h1>Reagent Search</h1>
+
+  <form action="{{ url_for('main.main') }}" method="POST">
+    <p>
+      <label>試薬名（部分一致）:
+        <input type="text" name="name">
+      </label>
+    </p>
+    <div class="formula-inputs">
+      <label>C: <input type="number" name="C" size="3"></label>
+      <label>H: <input type="number" name="H" size="3"></label>
+      <label>O: <input type="number" name="O" size="3"></label>
+      <label>N: <input type="number" name="N" size="3"></label>
+    </div>
+    <p>
+      <input type="hidden" name="others" id="others">
+    </p>
+
+    <div class="periodic-table-wrapper">
+      <div class="periodic-table">
+        <div class="element" style="grid-column: 1;">H</div>
+        <div class="spacer" style="grid-column: 2 / span 16;"></div>
+        <div class="element" style="grid-column: 18;">He</div>
+
+        <div class="element">Li</div>
+        <div class="element">Be</div>
+        <div class="spacer" style="grid-column: 3 / span 10;"></div>
+        <div class="element">B</div>
+        <div class="element">C</div>
+        <div class="element">N</div>
+        <div class="element">O</div>
+        <div class="element">F</div>
+        <div class="element">Ne</div>
+
+        <div class="element">Na</div>
+        <div class="element">Mg</div>
+        <div class="spacer" style="grid-column: 3 / span 10;"></div>
+        <div class="element">Al</div>
+        <div class="element">Si</div>
+        <div class="element">P</div>
+        <div class="element">S</div>
+        <div class="element">Cl</div>
+        <div class="element">Ar</div>
+
+        <div class="element">K</div>
+        <div class="element">Ca</div>
+        <div class="element">Sc</div>
+        <div class="element">Ti</div>
+        <div class="element">V</div>
+        <div class="element">Cr</div>
+        <div class="element">Mn</div>
+        <div class="element">Fe</div>
+        <div class="element">Co</div>
+        <div class="element">Ni</div>
+        <div class="element">Cu</div>
+        <div class="element">Zn</div>
+        <div class="element">Ga</div>
+        <div class="element">Ge</div>
+        <div class="element">As</div>
+        <div class="element">Se</div>
+        <div class="element">Br</div>
+        <div class="element">Kr</div>
+
+        <div class="element">Rb</div>
+        <div class="element">Sr</div>
+        <div class="element">Y</div>
+        <div class="element">Zr</div>
+        <div class="element">Nb</div>
+        <div class="element">Mo</div>
+        <div class="element">Tc</div>
+        <div class="element">Ru</div>
+        <div class="element">Rh</div>
+        <div class="element">Pd</div>
+        <div class="element">Ag</div>
+        <div class="element">Cd</div>
+        <div class="element">In</div>
+        <div class="element">Sn</div>
+        <div class="element">Sb</div>
+        <div class="element">Te</div>
+        <div class="element">I</div>
+        <div class="element">Xe</div>
+
+        <div class="element">Cs</div>
+        <div class="element">Ba</div>
+        <div class="spacer" style="grid-column: 3 / span 1;"></div>
+        <div class="element">Hf</div>
+        <div class="element">Ta</div>
+        <div class="element">W</div>
+        <div class="element">Re</div>
+        <div class="element">Os</div>
+        <div class="element">Ir</div>
+        <div class="element">Pt</div>
+        <div class="element">Au</div>
+        <div class="element">Hg</div>
+        <div class="element">Tl</div>
+        <div class="element">Pb</div>
+        <div class="element">Bi</div>
+        <div class="element">Po</div>
+        <div class="element">At</div>
+        <div class="element">Rn</div>
+
+        <div class="element">Fr</div>
+        <div class="element">Ra</div>
+      </div>
+    </div>
+    <p><button type="submit">検索</button></p>
+  </form>
+
+  <div class="button-container">
+    <a href="{{ url_for('register.register') }}">
+      <button type="button">試薬登録</button>
+    </a>
+  </div>
+
+  <script>
+    const elements = document.querySelectorAll(".element");
+    const othersInput = document.getElementById("others");
+
+    elements.forEach(el => {
+      el.addEventListener("click", () => {
+        const symbol = el.textContent.trim();
+        let current = othersInput.value.split(",").map(e => e.trim());
+        if (current.includes(symbol)) {
+          // すでに存在する場合、削除
+          current = current.filter(e => e !== symbol);
+        } else {
+          // 存在しない場合、追加
+          current.push(symbol);
+        }
+
+        // 更新した元素リストを入力フィールドにセット
+        othersInput.value = current.join(", ");
+
+        el.classList.toggle("selected");
+      });
+    });
+  </script>
+</body>
+</html>
