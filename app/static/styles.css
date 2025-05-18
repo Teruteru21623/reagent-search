@@ -135,7 +135,7 @@ body {
   }
   
   .reagent-select {
-    width: 100px;  /* 必要なら60〜100pxくらいで調整 */
+    width: 200px;  /* 必要なら60〜100pxくらいで調整 */
   }
 
   .toggle-label {
