@@ -16,6 +16,8 @@ def main():
         h = request.form.get("H", "") #Hの値、もしくは空文字
         o = request.form.get("O", "") #Oの値、もしくは空文字
         n = request.form.get("N", "") #Nの値、もしくは空文字
+        reagent_letter = request.form.get("reagent_letter", "")
+        danger_toggle = request.form.get("danger_toggle", "")
         others = request.form.get("others", "") #othersの値、もしくは空文字
 
         # Reagentモデルを使ったクエリの準備。条件に合うものがqueryに追加される。
@@ -23,7 +25,6 @@ def main():
 
         # nameを部分一致検索
         if name:
-            
             query = query.filter(Reagent.name.ilike(f"%{name}%"))
 
         # C,H,O,Nが入力されてたらその元素と数の完全一致を検索
@@ -32,6 +33,13 @@ def main():
                 pattern = f"{element}{count}"
                 query = regexp_filter(query, Reagent.formula, pattern)
 
+        # 試薬番号のアルファベット
+        if reagent_letter:
+            query = query.filter(Reagent.code.startswith(reagent_letter))
+
+        if danger_toggle == "on":
+            query = query.filter(Reagent.location.in_(["毒物庫", "劇物庫"]))
+            
         # 周期表からの元素選択
         if others:
             for el in [e.strip() for e in others.split(",") if e.strip()]:

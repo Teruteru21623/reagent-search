@@ -115,12 +115,47 @@ body {
     display: flex;
     gap: 10px;
     margin-top: 10px;
+    margin-bottom: 10px;
   }
   
   .formula-inputs input[type="number"] {
     width: 60px;
     padding: 8px;
   }
+
+  .form-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .form-row label {
+    margin: 0;
+  }
+  
+  .reagent-select {
+    width: 100px;  /* 必要なら60〜100pxくらいで調整 */
+  }
+
+  .toggle-label {
+    display: inline-block;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  input[type="checkbox"]#danger_toggle {
+    display: none;
+  }
+  
+  input[type="checkbox"]#danger_toggle:checked + .toggle-label {
+    background-color: #ff6b6b;
+    color: white;
+    border-color: #ff6b6b;
+  }
+  
   
   input[type="submit"],
   button {
