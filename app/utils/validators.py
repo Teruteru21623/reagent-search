@@ -64,4 +64,8 @@ def validate_register_form(form):
     if not form.get("registrant"):
         errors.append("登録者名を入力してください。")
 
+    status = form.get("status")
+    if status not in ["劇物", "毒物", "その他"]:
+        errors.append("区分が不正です。")
+
     return errors

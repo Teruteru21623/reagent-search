@@ -63,6 +63,8 @@ def register():
         formula_parts = [f"{el}{cnt}" for el, cnt in zip(elements, counts)]
         formula = "".join(formula_parts)
 
+        status = request.form.get("status", "その他")
+
         # 試薬会社
         company = request.form.get("company")
 
@@ -77,7 +79,8 @@ def register():
             volume=volume_str,
             formula=formula,
             company=company,
-            registrant=registrant
+            registrant=registrant,
+            status=status
         )
 
         db.session.add(reagent)

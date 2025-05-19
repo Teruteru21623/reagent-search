@@ -29,6 +29,7 @@
           <th>容量</th>
           <th>試薬会社</th>
           <th>登録者名</th>
+          <th>区分</th>
           <th>操作</th>
         </tr>
       </thead>
@@ -46,6 +47,7 @@
           <td>{{ reagent.volume }}</td>
           <td>{{ reagent.company }}</td>
           <td>{{ reagent.registrant }}</td>
+          <td>{{ reagent.status or "なし" }}</td>
           <td>
             <form action="{{ url_for('register.delete_reagent', reagent_id=reagent.id) }}" method="POST" class="inline-form">
               <button type="submit" class="delete-button" onclick="return confirm('本当に削除しますか？');">削除</button>
