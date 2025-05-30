@@ -33,12 +33,13 @@
   <form method="POST" action="/register">
     <!-- 試薬名 -->
     <label for="name">試薬名:</label>
-    <input type="text" name="name" id="name" value="{{ request.form.get('name', '') }}" required>
+    <input type="text" name="name" class="name" id="name" value="{{ request.form.get('name', '') }}">
 
     <!-- 試薬番号 -->
-    <label for="code_prefix">試薬番号:</label>
-    <div class="shelf-group">
-      <select id="code_prefix" name="code_prefix" required>
+    <label>試薬番号:</label>
+    <div class="code_number_group">
+      <select name="code_prefix" class="code_prefix" id="code_prefix">
+        <option value="">--選択--</option>
         <option value="A" {% if request.form.get('code_prefix') == 'A' %}selected{% endif %}>A : 無機塩(主にNa塩)</option>
         <option value="B" {% if request.form.get('code_prefix') == 'B' %}selected{% endif %}>B : 無機塩(主にK塩)</option>
         <option value="C" {% if request.form.get('code_prefix') == 'C' %}selected{% endif %}>C : 無機塩(主にLi塩)</option>
@@ -66,7 +67,7 @@
         <option value="Y" {% if request.form.get('code_prefix') == 'Y' %}selected{% endif %}>Y : ケイ素化合物</option>
         <option value="Z" {% if request.form.get('code_prefix') == 'Z' %}selected{% endif %}>Z : その他</option>
       </select>
-      <input type="number" name="code_number" id="reagent_number" min="0" placeholder="番号" value="{{ request.form.get('code_number', '') }}" required> <!--requiredの代わりにreadonly {{ request.form.get('code_number', '') }}は削除-->
+      <input type="number" name="code_number" id="code_number" class="reagent_number" readonly> <!--requiredの代わりにreadonly {{ request.form.get('code_number', '') }}は削除-->
     </div>
 
     <!-- 棚番号の種類 -->
@@ -89,17 +90,18 @@
     <!-- 棚番号（数字） -->
     <div id="numeric_location">
       <label>棚番号:</label>
-      <div class="shelf-group" style="align-items: center;">
-        <input type="number" name="location_row" id="location_row" placeholder="番号" min="1" value="{{ request.form.get('location_row', '') }}">
+      <div class="numeric_location_group">
+        <input type="number" name="location_row" class="location_row" placeholder="番号" min="1" value="{{ request.form.get('location_row', '') }}">
         <span style="font-weight: bold;">-</span>
-        <input type="number" name="location_col" id="location_col" placeholder="番号" min="0" value="{{ request.form.get('location_col', '') }}">
+        <input type="number" name="location_col" class="location_col" placeholder="番号" min="0" value="{{ request.form.get('location_col', '') }}">
       </div>
     </div>
 
     <!-- 棚番号（指定棚） -->
-    <div id="preset_location" class="hidden">
-      <label for="preset_location">棚番号（場所）:</label>
-      <select name="preset_location" id="shelf">
+    <div id="preset_location_area" class="hidden">
+      <label for="shelf">棚番号（場所）:</label>
+      <select name="preset_location" id="shelf" class="shelf">
+        <option value="">選択してください</option>
         <option value="劇物庫" {% if request.form.get('preset_location') == '劇物庫' %}selected{% endif %}>劇物庫</option>
         <option value="毒物庫" {% if request.form.get('preset_location') == '毒物庫' %}selected{% endif %}>毒物庫</option>
         <option value="冷蔵庫" {% if request.form.get('preset_location') == '冷蔵庫' %}selected{% endif %}>冷蔵庫</option>
@@ -116,59 +118,67 @@
         <option value="デシケーター" {% if request.form.get('preset_location') == 'デシケーター' %}selected{% endif %}>デシケーター</option>
         <option value="その他" {% if request.form.get('preset_location') == 'その他' %}selected{% endif %}>その他</option>
       </select>
+
+      <!-- その他用の入力欄（最初は非表示） -->
+      <input type="text" id="custom_location" name="custom_location" class="custom_location" placeholder="棚の名前" style="display:none">
     </div>
 
     <!-- 容量 -->
-    <label for="volume">容量:</label>
-    <div class="shelf-group">
-      <input type="number" name="volume" id="volume" min="0" placeholder="数" value="{{ request.form.get('volume', '') }}" required>
-      <select name="volume_unit" id="volume_unit">
+    <label for="volume_label">容量:</label>
+    <div class="volume_group">
+      <input type="number" name="volume" id="volume_label" class="volume" min="0" placeholder="数" value="{{ request.form.get('volume', '') }}">
+      <select name="volume_unit" class="volume_unit">
         <option value="g" {% if request.form.get('volume_unit') == 'g' %}selected{% endif %}>g</option>
         <option value="mL" {% if request.form.get('volume_unit') == 'mL' %}selected{% endif %}>mL</option>
       </select>
     </div>
 
-    <!-- 分子式 -->
+     <!-- 分子式  -->
     <label>分子式:</label>
-    <div id="formula_fields">
-      {% for el, cnt in zipped_formula %}
-        <div class="shelf-group">
-          <input type="text" name="elements[]" class="elements" value="{{ el }}" placeholder="元素 (例: C)">
-          <input type="number" name="counts[]" class="number" value="{{ cnt }}" placeholder="数字" min="1">
-        </div>
-      {% endfor %}
-      {% if elements|length == 0 %}
-        <!-- 初期表示用の空欄 -->
-        <div class="shelf-group">
-          <input type="text" name="elements[]" class="elements" placeholder="元素 (例: C)" required>
-          <input type="number" name="counts[]" class="number" placeholder="数" min="1" required>
-        </div>
-      {% endif %}
+    <div id="elements-container">
+      <div class="element-group">
+        <input type="text" name="elements[]" class="element_register" placeholder="元素 (例:C)">
+        <input type="number" name="counts[]" class="element_number_register" placeholder="数" min="1">
+      </div>
     </div>
-    <button type="button" onclick="addElement()">＋元素を追加</button>
+    <button type="button" id="add-element-btn">元素を追加</button>
+    
 
+    <!--
+    <div>
+      <label>分子式</label>
+      <input type="text" name="formula" placeholder="例: C6H12O6" required>
+    </div>
+    -->
+    
+    <label>区分</label>
     <div class="form-group">
-      <label>区分（任意）</label><br>
-      <input type="radio" name="status" value="劇物"> 劇物
-      <input type="radio" name="status" value="毒物"> 毒物
-      <input type="radio" name="status" value="その他" checked> その他
+      <label>
+        <input type="radio" name="status" value="劇物"> 劇物
+      </label>
+      <label>
+        <input type="radio" name="status" value="毒物"> 毒物
+      </label>
     </div>
   
     <!-- 試薬会社 -->
     <label for="company">試薬会社:</label>
-    <select name="company" id="company">
+    <select name="company" id="company" class="company">
       <option value="TCI" {% if request.form.get('company') == 'TCI' %}selected{% endif %}>TCI</option>
       <option value="Wako"  {% if request.form.get('company') == 'Wako' %}selected{% endif %}>Wako</option>
       <option value="Aldrich"  {% if request.form.get('company') == 'Aldrich' %}selected{% endif %}>Aldrich</option>
       <option value="その他"  {% if request.form.get('company') == 'その他' %}selected{% endif %}>その他</option>
+
+      <!-- その他用の入力欄（最初は非表示） -->
+      <input type="text" id="custom_company" name="custom_company" class="custom_company" placeholder="試薬会社名" style="display:none">
     </select>
 
     <!-- 登録者名 -->
     <label for="registrant">登録者名:</label>
-    <input type="text" name="registrant" id="registrant" value="{{ request.form.get('registrant', '') }}">
+    <input type="text" name="registrant" id="registrant" class="registrant" value="{{ request.form.get('registrant', '') }}">
 
     <!-- 登録ボタン -->
-    <div style="margin-top: 10px;">
+    <div style="margin-top: 3px;">
       <input type="submit" value="登録">
     </div>
     
@@ -184,51 +194,122 @@
     function toggleLocationFields() {
       const type = document.querySelector('input[name="location_type"]:checked').value;
       document.getElementById("numeric_location").classList.toggle("hidden", type !== "numeric");
-      document.getElementById("preset_location").classList.toggle("hidden", type !== "preset");
+      document.getElementById("preset_location_area").classList.toggle("hidden", type !== "preset");
     }
 
     window.onload = toggleLocationFields;
 
-    function addElement() {
-      const div = document.createElement("div");
-      div.className = "shelf-group";
-      div.innerHTML = `
-        <input type="text" name="elements[]" class="elements" placeholder="元素 (例: C)">
-        <input type="number" name="counts[]" class="number" placeholder="数" min="1">
-      `;
-      document.getElementById("formula_fields").appendChild(div);
-    }
+    document.getElementById("add-element-btn").addEventListener("click", function() {
+    const container = document.getElementById("elements-container");
 
-    /*
-    document.getElementById("code_prefix").addEventListener("change", function() {
-      const prefix = this.value;
-      fetch(`/api/get_next_code_number?prefix=${prefix}`)
-        .then(response => response.json())
-        .then(data => {
-          if (data.next_number !== null) {
-            document.getElementById("reagent_number").value = data.next_number;
-          }
-        })
-        .catch(error => {
-          console.error("番号取得エラー:", error);
-        });
+    const div = document.createElement("div");
+    div.className = "element-group";
+
+    const elementInput = document.createElement("input");
+    elementInput.type = "text";
+    elementInput.name = "elements[]";
+    elementInput.className = "element_register"
+    elementInput.placeholder = "元素 (例:C)";
+
+    const countInput = document.createElement("input");
+    countInput.type = "number";
+    countInput.name = "counts[]";
+    countInput.className = "element_number_register"
+    countInput.placeholder = "数";
+    countInput.min = 1;
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.type = "button";
+    deleteBtn.textContent = "削除";
+    deleteBtn.className = "delete-element-btn";
+    deleteBtn.addEventListener("click", function() {
+      div.remove();
+      toggleDeleteButtons();
     });
 
-    // ページロード時にも初期値をセットしたい場合は次を追加
-    window.addEventListener("load", function() {
-      const prefix = document.getElementById("code_prefix").value;
-      if (prefix) {
-        // 上記と同じfetch処理を呼ぶ
-        fetch(`/api/get_next_code_number?prefix=${prefix}`)
-          .then(response => response.json())
-          .then(data => {
-            if (data.next_number !== null) {
-              document.getElementById("reagent_number").value = data.next_number;
-            }
-          });
+    div.appendChild(elementInput);
+    div.appendChild(countInput);
+    div.appendChild(deleteBtn);
+
+    container.appendChild(div);
+
+    toggleDeleteButtons();
+  });
+
+  function toggleDeleteButtons() {
+    const groups = document.querySelectorAll(".element-group");
+    const deleteButtons = document.querySelectorAll(".delete-element-btn");
+
+    if (groups.length > 1) {
+      deleteButtons.forEach(btn => btn.style.display = "inline-block");
+    } else {
+      deleteButtons.forEach(btn => btn.style.display = "none");
+    }
+  }
+
+  // 初期状態の削除ボタン表示調整
+  document.addEventListener("DOMContentLoaded", toggleDeleteButtons);
+  
+
+    let currentChecked = null;
+
+  document.querySelectorAll('input[name="status"]').forEach(radio => {
+    radio.addEventListener("click", function() {
+      if (currentChecked === this) {
+        this.checked = false;
+        currentChecked = null;
+      } else {
+        currentChecked = this;
       }
     });
-    */
+  });
+
+  document.getElementById("shelf").addEventListener("change", function() {
+    const customInput = document.getElementById("custom_location");
+    if (this.value === "その他") {
+      customInput.style.display = "block";
+    } else {
+      customInput.style.display = "none";
+      customInput.value = ""; // その他以外選んだときは入力欄クリア
+    }
+  });
+
+  document.getElementById("company").addEventListener("change", function() {
+    const customInput = document.getElementById("custom_company");
+    if (this.value === "その他") {
+      customInput.style.display = "block";
+    } else {
+      customInput.style.display = "none";
+      customInput.value = ""; // その他以外選んだときは入力欄クリア
+    }
+  });
+
+  document.getElementById("code_prefix").addEventListener("change", function() {
+    const prefix = this.value;
+    if (prefix) {
+        fetchNextNumber(prefix);
+    }
+  });
+
+  document.getElementById("code_prefix").addEventListener("change", function () {
+  const alphabet = this.value;
+  if (!alphabet) {
+    document.getElementById("code_number").value = "";
+    return;
+  }
+
+  fetch(`/register/next_number?alphabet=${alphabet}`)
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById("code_number").value = data.number;
+    })
+    .catch(error => {
+      console.error("番号取得エラー", error);
+    });
+  });
+
+
+
   </script>
 </body>
 </html>

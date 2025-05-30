@@ -56,16 +56,4 @@ def validate_register_form(form):
             if not cnt.isdigit() or int(cnt) <= 0:
                 errors.append(f"{cnt} は無効な数値です。")
 
-    # 試薬会社
-    if not form.get("company"):
-        errors.append("試薬会社を選択してください。")
-
-    # 登録者
-    if not form.get("registrant"):
-        errors.append("登録者名を入力してください。")
-
-    status = form.get("status")
-    if status not in ["劇物", "毒物", "その他"]:
-        errors.append("区分が不正です。")
-
     return errors

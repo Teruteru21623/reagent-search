@@ -25,30 +25,35 @@
           <th>試薬番号</th>
           <th>試薬名</th>
           <th>棚番号</th>
-          <th>分子式</th>
+          <th class="formula_table">分子式</th>
           <th>容量</th>
           <th>試薬会社</th>
-          <th>登録者名</th>
-          <th>区分</th>
-          <th>操作</th>
+          <th class="register_name_table">登録者名</th>
+          <th class="control">操作</th>
         </tr>
       </thead>
       <tbody>
         {% for reagent in results %}
         <tr>
-          <td>{{ reagent.code }}</td>
+          <td
+            {% if reagent.status == "劇物" %}
+              class="gekibutsu"
+            {% elif reagent.status == "毒物" %}
+              class="dokubutsu"
+            {% endif %}
+          >
+            {{ reagent.code or "" }}</td>
           <td>
             <a href="https://www.google.com/search?q={{ reagent.name | urlencode }}" target="_blank" rel="noopener noreferrer">
-              {{ reagent.name }}
+              {{ reagent.name or "" }}
             </a>
           </td>
-          <td>{{ reagent.location }}</td>
-          <td>{{ reagent.formula | formula | safe }}</td>
-          <td>{{ reagent.volume }}</td>
-          <td>{{ reagent.company }}</td>
-          <td>{{ reagent.registrant }}</td>
-          <td>{{ reagent.status or "なし" }}</td>
-          <td>
+          <td>{{ reagent.location or "" }}</td>
+          <td class="formula_table">{{ reagent.formula | formula | safe or ""}}</td>
+          <td>{{ reagent.volume or "" }}</td>
+          <td>{{ reagent.company or "" }}</td>
+          <td class="register_name_table">{{ reagent.registrant or "" }}</td>
+          <td class="control">
             <form action="{{ url_for('register.delete_reagent', reagent_id=reagent.id) }}" method="POST" class="inline-form">
               <button type="submit" class="delete-button" onclick="return confirm('本当に削除しますか？');">削除</button>
             </form>

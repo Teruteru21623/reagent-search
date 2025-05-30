@@ -10,67 +10,6 @@ body {
     border-bottom: 2px solid #ccc;
     padding-bottom: 5px;
   }
-  
-  /* 入力フォームの見た目 */
-  form {
-    background: #fff; /*背景の色*/
-    padding: 20px; /*formの内側の余白設定 上下左右に20px*/
-    margin: 20px auto; /*formの外側の余白設定 上下に20px 左右は自動で中央に設定*/
-    border-radius: 8px; /*角を丸める*/
-    max-width: 600px; /*横幅の広さ*/
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /*formの影*/
-  }
-  
-  /* formのラベル(項目欄の見た目) */
-  form label {
-    display: block; /*labelとinputを縦並びにする*/
-    margin-top: 15px; /*labelの外側の余白設定 上側に15px余白*/
-    font-weight: bold; /*太字*/
-  }
-  
-  /* id="name"の設定(試薬名) */
-  #name, #registrant {
-    padding: 10px; /* 文字と枠線の間の広さ*/ 
-    margin-top: 5px; /*上側の余白の広さ*/
-    width: 100%; /* 横幅は親要素の幅(つまりform → 600px)*/
-    max-width: 400px; /* ただし400pxまで*/
-    border: 1px solid #ccc; /*枠線設定 1pxの実線*/
-    border-radius: 4px; /* 角を丸める*/
-    box-sizing: border-box; /* paddingやborderを含めてwidthを計算する*/
-  }
-
-  /* 試薬番号のアルファベット選択欄 */
-  #code_prefix, #shelf {
-    padding: 10px; /* 文字と枠線の間の広さ*/ 
-    margin-top: 5px; /*上側の余白の広さ*/
-    width: 100%; /* 横幅は親要素の幅(つまりform → 600px)*/
-    max-width: 200px; /* ただし200pxまで*/
-    border: 1px solid #ccc; /*枠線設定 1pxの実線*/
-    border-radius: 4px; /* 角を丸める*/
-    box-sizing: border-box; /* paddingやborderを含めてwidthを計算する*/
-  }
-
-  /* 試薬番号の数字入力欄 */
-  #reagent_number, #location_row, #location_col, #volume, #volume_unit, .shelf-group .number {
-    padding: 10px; /* 文字と枠線の間の広さ*/ 
-    margin-top: 5px; /*上側の余白の広さ*/
-    width: 100%; /* 横幅は親要素の幅(つまりform → 600px)*/
-    max-width: 80px; /* ただし50pxまで*/
-    border: 1px solid #ccc; /*枠線設定 1pxの実線*/
-    border-radius: 4px; /* 角を丸める*/
-    box-sizing: border-box; /* paddingやborderを含めてwidthを計算する*/
-  }
-
-  /* 試薬番号の数字入力欄 */
-  .shelf-group .elements, #company {
-    padding: 10px; /* 文字と枠線の間の広さ*/ 
-    margin-top: 5px; /*上側の余白の広さ*/
-    width: 100%; /* 横幅は親要素の幅(つまりform → 600px)*/
-    max-width: 100px; /* ただし50pxまで*/
-    border: 1px solid #ccc; /*枠線設定 1pxの実線*/
-    border-radius: 4px; /* 角を丸める*/
-    box-sizing: border-box; /* paddingやborderを含めてwidthを計算する*/
-  }
 
   /* 数値入力欄の上下ボタン（spinner）を消す */
   input[type="number"]::-webkit-outer-spin-button,
@@ -79,38 +18,9 @@ body {
     margin: 0;
   }
 
-  .radio-group {
-    display: flex;
-    gap: 20px;
-    margin: 5px 0;
-  }
-  
-  .radio-group label {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
+  /* main.html */
 
-  .shelf-group {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    margin-top: 5px;
-  }
-
-  input[type="text"],
-  input[type="number"],
-  select
-  {
-    padding: 10px; /*入力欄の広さ*/ 
-    margin-top: 5px; /*上側の余白の広さ*/
-    width: 100%;
-    max-width: 400px;
-    box-sizing: border-box;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-
+  /* C,H,O,N入力欄 */
   .formula-inputs {
     display: flex;
     gap: 10px;
@@ -118,24 +28,33 @@ body {
     margin-bottom: 10px;
   }
   
+  /* 数字入力欄 */
   .formula-inputs input[type="number"] {
-    width: 60px;
-    padding: 8px;
+    padding: 10px; /* 文字と枠線の間の広さ*/ 
+    margin-top: 5px; /*上側の余白の広さ*/
+    width: 100%; /* 横幅は親要素の幅(つまりform → 600px)*/
+    max-width: 80px; /* ただし80pxまで*/
+    border: 1px solid #ccc; /*枠線設定 1pxの実線*/
+    border-radius: 4px; /* 角を丸める*/
+    box-sizing: border-box; /* paddingやborderを含めてwidthを計算する*/
   }
 
   .form-row {
     display: flex;
-    align-items: center;
+    vertical-align: middle;
     gap: 10px;
     margin-bottom: 10px;
   }
   
-  .form-row label {
-    margin: 0;
-  }
-  
   .reagent-select {
-    width: 200px;  /* 必要なら60〜100pxくらいで調整 */
+    padding: 10px; /* 文字と枠線の間の広さ*/ 
+    margin-top: 5px; /*上側の余白の広さ*/
+    width: 100%; /* 横幅は親要素の幅(つまりform → 600px)*/
+    max-width: 200px; /* ただし200pxまで*/
+    border: 1px solid #ccc; /*枠線設定 1pxの実線*/
+    border-radius: 4px; /* 角を丸める*/
+    box-sizing: border-box; /* paddingやborderを含めてwidthを計算する*/
+    
   }
 
   .toggle-label {
@@ -266,8 +185,8 @@ body {
 
   /* 検索結果テーブルのデザイン */
   table {
-    width: 80%;
-    max-width: 1000px;
+    width: 100%;
+    max-width: 1700px;
     margin: 20px auto;
     border-collapse: collapse;
     margin-bottom: 20px;
@@ -290,8 +209,20 @@ body {
     background-color: #f9f9f9;
   }
 
+  .register_name_table {
+    width: 100px;
+  }
+
+  .control {
+    width: 50px;
+  }
+
+  .formula_table {
+    width: 50px;
+  }
+
   .result-container {
-    max-width: 1100px;
+    max-width: 1700px;
     margin: 0 auto;
     padding: 20px;
   }
@@ -374,6 +305,178 @@ body {
   margin-bottom: 20px;
   color: #a33;
 }
+
+.gekibutsu {
+  background-color: purple;
+  color: white;
+}
+
+.dokubutsu {
+  background-color: red;
+  color: white;
+}
+
+/* register.html用 */
+
+/* 入力フォームの見た目 */
+form {
+  background: #fff; /*背景の色*/
+  padding: 20px; /*formの内側の余白設定 上下左右に20px*/
+  margin: 20px auto; /*formの外側の余白設定 上下に20px 左右は自動で中央に設定*/
+  border-radius: 8px; /*角を丸める*/
+  max-width: 600px; /*横幅の広さ*/
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1); /*formの影*/
+}
+
+/* formのラベル(項目欄の見た目) */
+form label {
+  display: block; /*labelとinputを縦並びにする*/
+  margin-top: 15px; /*labelの外側の余白設定 上側に15px余白*/
+  font-weight: bold; /*太字*/
+}
+
+/* 試薬名入力欄 */
+/* 登録者入力欄 */
+.name, .registrant {
+  padding: 10px; /* 文字と枠線の間の広さ*/ 
+  margin-top: 5px; /*上側の余白の広さ*/
+  width: 100%; /* 横幅は親要素の幅(つまりform → 600px)*/
+  max-width: 400px; /* ただし400pxまで*/
+  border: 1px solid #ccc; /*枠線設定 1pxの実線*/
+  border-radius: 4px; /* 角を丸める*/
+  box-sizing: border-box; /* paddingやborderを含めてwidthを計算する*/
+}
+
+/* 試薬番号入力フォーム */
+/* 容量入力フォーム */
+.code_number_group, .volume_group {
+  display: flex; /* 横並びにする */
+  gap: 5px; /* 要素同士の隙間 */
+  align-items: center; /* 高さをそろえる */
+}
+
+/* class="code_prefix"の設定(試薬番号のアルファベット選択欄) */
+/* 棚番号(場所)の選択欄 */
+.code_prefix, .shelf {
+  padding: 10px; /* 文字と枠線の間の広さ*/ 
+  margin-top: 5px; /*上側の余白の広さ*/
+  width: 100%; /* 横幅は親要素の幅(つまりform → 600px)*/
+  max-width: 200px; /* ただし200pxまで*/
+  border: 1px solid #ccc; /*枠線設定 1pxの実線*/
+  border-radius: 4px; /* 角を丸める*/
+  box-sizing: border-box; /* paddingやborderを含めてwidthを計算する*/
+  line-height: 1.5; /* 行の高さを指定する */
+  height: 36px; /* 要素の高さを固定する */ 
+  vertical-align: middle; /* 垂直方向を中央に揃える */
+}
+
+/* その他の棚の名前 */
+.custom_location, .custom_company {
+  padding: 10px; /* 文字と枠線の間の広さ*/ 
+  margin-top: 5px; /*上側の余白の広さ*/
+  width: 100%; /* 横幅は親要素の幅(つまりform → 600px)*/
+  max-width: 150px; /* ただし400pxまで*/
+  border: 1px solid #ccc; /*枠線設定 1pxの実線*/
+  border-radius: 4px; /* 角を丸める*/
+  box-sizing: border-box; /* paddingやborderを含めてwidthを計算する*/
+}
+
+/* 容量の単位選択欄 */
+.volume_unit {
+  padding: 5px 10px; /* 文字と枠線の間の広さ*/ 
+  margin-top: 5px; /*上側の余白の広さ*/
+  width: 100%; /* 横幅は親要素の幅(つまりform → 600px)*/
+  max-width: 80px; /* ただし80pxまで*/
+  border: 1px solid #ccc; /*枠線設定 1pxの実線*/
+  border-radius: 4px; /* 角を丸める*/
+  box-sizing: border-box; /* paddingやborderを含めてwidthを計算する*/
+  line-height: 1.5; /* 行の高さを指定する */
+  height: 36px; /* 要素の高さを固定する */
+  vertical-align: middle; /* 垂直方向を中央に揃える */
+}
+
+/* 試薬番号の数字選択欄 */
+/* 棚番号の数字入力欄 */
+/* 容量入力欄 */
+.reagent_number, .location_row, .location_col, .volume {
+  padding: 10px; /* 文字と枠線の間の広さ*/ 
+  margin-top: 5px; /*上側の余白の広さ*/
+  width: 100%; /* 横幅は親要素の幅(つまりform → 600px)*/
+  max-width: 80px; /* ただし80pxまで*/
+  border: 1px solid #ccc; /*枠線設定 1pxの実線*/
+  border-radius: 4px; /* 角を丸める*/
+  box-sizing: border-box; /* paddingやborderを含めてwidthを計算する*/
+  line-height: 1.5; /* 行の高さを指定する */
+  height: 36px; /* 要素の高さを固定する */
+  vertical-align: middle; /* 垂直方向を中央に揃える */
+}
+
+/* 試薬会社選択欄 */
+.company {
+  padding: 10px; /* 文字と枠線の間の広さ*/ 
+  margin-top: 5px; /*上側の余白の広さ*/
+  width: 100%; /* 横幅は親要素の幅(つまりform → 600px)*/
+  max-width: 100px; /* ただし50pxまで*/
+  border: 1px solid #ccc; /*枠線設定 1pxの実線*/
+  border-radius: 4px; /* 角を丸める*/
+  box-sizing: border-box; /* paddingやborderを含めてwidthを計算する*/
+}
+
+/* 棚番号の種類を決めるラジオボタングループの設定 */
+.radio-group, .form-group {
+  display: flex; /* ラジオボタンを横並びにする */
+  gap: 20px; /* ラジオボタン同士の隙間*/
+  margin: 5px 0; /* このグループの上下に5px,左右に余白なしで詰める */
+}
+
+/* 棚番号(数字)入力フォーム */
+.numeric_location_group {
+  display: flex; /* 横並びにする */
+  gap: 5px; /* 要素同士の隙間 */
+  align-items: baseline; /* 高さを真ん中にそろえる */
+}
+
+/* 元素追加フォーム */
+.element-group {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+  align-items: center;
+}
+
+/* 元素入力欄 */
+.element_register {
+  padding: 10px; /* 文字と枠線の間の広さ*/ 
+  margin-top: 5px; /*上側の余白の広さ*/
+  width: 100%; /* 横幅は親要素の幅(つまりform → 600px)*/
+  max-width: 100px; /* ただし100pxまで*/
+  border: 1px solid #ccc; /*枠線設定 1pxの実線*/
+  border-radius: 4px; /* 角を丸める*/
+  box-sizing: border-box; /* paddingやborderを含めてwidthを計算する*/
+}
+
+/* 元素の数入力欄 */
+.element_number_register {
+  padding: 10px; /* 文字と枠線の間の広さ*/ 
+  margin-top: 5px; /*上側の余白の広さ*/
+  width: 100%; /* 横幅は親要素の幅(つまりform → 600px)*/
+  max-width: 80px; /* ただし80pxまで*/
+  border: 1px solid #ccc; /*枠線設定 1pxの実線*/
+  border-radius: 4px; /* 角を丸める*/
+  box-sizing: border-box; /* paddingやborderを含めてwidthを計算する*/
+}
+
+/* 削除ボタン */
+.delete-element-btn {
+  padding: 8px; /* 文字と枠線の間の広さ*/ 
+  margin-top: 5px; /*上側の余白の広さ*/
+  background-color: #f44336;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
 
   
 
