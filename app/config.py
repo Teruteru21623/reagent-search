@@ -7,7 +7,11 @@ class Config:
 
     # SQLiteデータベースの保存先（相対パス指定）
     # SQLiteファイルは instance/ フォルダ内に reagents.db として保存される
-    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", "postgresql://reagent_user:Tenor623@localhost:5432/reagent_search_dev")
+    url = os.getenv("DATABASE_URL")
+    if url and url.startswith("postgres://"):
+        url = url.replace("postgres://", "postgresql://", 1)
+    
+    SQLALCHEMY_DATABASE_URI = url or "postgresql://reagent_user:Tenor623@localhost:5432/reagent_search_dev"
 
     # SQLAlchemyの変更通知機能を無効化（不要な警告を防ぐ）
     SQLALCHEMY_TRACK_MODIFICATIONS = False
