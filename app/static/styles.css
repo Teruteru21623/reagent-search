@@ -238,6 +238,18 @@ body {
     cursor: pointer;
     transition: background-color 0.3s ease;
   }
+
+  .edit-button {
+    background-color: #357ae8;
+    color: #fff;
+    padding: 4px 8px;       /* 小さめの余白 */
+    font-size: 0.8rem;       /* 小さめの文字サイズ */
+    margin: 0;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
   
   .delete-button:hover {
     background-color: #c0392b;
@@ -381,6 +393,17 @@ form label {
   box-sizing: border-box; /* paddingやborderを含めてwidthを計算する*/
 }
 
+/* その他の棚の名前 */
+.custom_company {
+  padding: 10px; /* 文字と枠線の間の広さ*/ 
+  margin-top: 5px; /*上側の余白の広さ*/
+  width: 100%; /* 横幅は親要素の幅(つまりform → 600px)*/
+  max-width: 400px; /* ただし400pxまで*/
+  border: 1px solid #ccc; /*枠線設定 1pxの実線*/
+  border-radius: 4px; /* 角を丸める*/
+  box-sizing: border-box; /* paddingやborderを含めてwidthを計算する*/
+}
+
 /* 容量の単位選択欄 */
 .volume_unit {
   padding: 5px 10px; /* 文字と枠線の間の広さ*/ 
@@ -460,7 +483,7 @@ form label {
   padding: 10px; /* 文字と枠線の間の広さ*/ 
   margin-top: 5px; /*上側の余白の広さ*/
   width: 100%; /* 横幅は親要素の幅(つまりform → 600px)*/
-  max-width: 80px; /* ただし80pxまで*/
+  max-width: 100px; /* ただし80pxまで*/
   border: 1px solid #ccc; /*枠線設定 1pxの実線*/
   border-radius: 4px; /* 角を丸める*/
   box-sizing: border-box; /* paddingやborderを含めてwidthを計算する*/

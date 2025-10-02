@@ -1,3 +1,4 @@
+# 元素名を指定(指定以外の元素では登録不可)
 VALID_ELEMENTS = [
     "H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne",
     "Na", "Mg", "Al", "Si", "P", "S", "Cl", "Ar", "K", "Ca",
@@ -10,5 +11,5 @@ VALID_ELEMENTS = [
     "Tl", "Pb", "Bi", "Po", "At", "Rn", "Fr", "Ra", "Ac", "Th",
     "Pa", "U", "Np", "Pu", "Am", "Cm", "Bk", "Cf", "Es", "Fm",
     "Md", "No", "Lr", "Rf", "Db", "Sg", "Bh", "Hs", "Mt", "Ds",
-    "Rg", "Cn", "Nh", "Fl", "Mc", "Lv", "Ts", "Og"
+    "Rg", "Cn", "Nh", "Fl", "Mc", "Lv", "Ts", "Og", "D", "T"
 ]

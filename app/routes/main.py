@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request
 from app.models.reagent import Reagent
 from app.utils import login_required, regexp_filter
-from sqlalchemy import Text, and_, cast
+from sqlalchemy import Text, and_, cast, func, case, Integer
 
 main_bp = Blueprint("main", __name__)
 
@@ -51,6 +51,20 @@ def main():
         if conditions:
             query = query.filter(and_(*conditions))
 
+        query = query.order_by(
+            func.regexp_replace(Reagent.code, r"^([A-Z]).*$", r"\1"),
+            cast(
+                case(
+                    (
+                        Reagent.code.op("~")(r"^[A-Z][0-9]+"),
+                        func.regexp_replace(Reagent.code, r"^[A-Z]([0-9]+).*$", r"\1")
+                    ),
+                else_="0"
+                ),
+                Integer
+            )
+        )
+        
         results = query.all()
         return render_template("results.html", results=results)
     return render_template("main.html")
@@ -59,8 +73,10 @@ def main():
 @main_bp.route("/results", methods=["GET"])
 @login_required
 def results():
+    #main.htmlからnameとformulaを取得
     name_query = request.form.get("name", "")
     formula_query = request.form.get("formula", "")
+    sort = request.args.get("sort", "code")
 
     query = Reagent.query
 
@@ -69,6 +85,21 @@ def results():
     if formula_query:
         query = query.filter(Reagent.formula.ilike(f"%{formula_query}%"))
 
+    if sort == "code":
+        query = query.order_by(
+            func.regexp_replace(Reagent.code, r"^([A-Z]).*$", r"\1"),
+            cast(
+                case(
+                    (
+                        Reagent.code.op("~")(r"^[A-Z][0-9]+"),
+                        func.regexp_replace(Reagent.code, r"^[A-Z]([0-9]+).*$", r"\1")
+                    ),
+                    else_="0"
+                ),
+                Integer
+            )
+        )
+
     results = query.all()
 
-    return render_template("results.html", results=results)
+    return render_template("results.html", results=results, name=name_query, formula=formula_query, sort=sort)

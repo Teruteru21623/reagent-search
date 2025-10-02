@@ -67,7 +67,7 @@
         <option value="Y" {% if request.form.get('code_prefix') == 'Y' %}selected{% endif %}>Y : ケイ素化合物</option>
         <option value="Z" {% if request.form.get('code_prefix') == 'Z' %}selected{% endif %}>Z : その他</option>
       </select>
-      <input type="number" name="code_number" id="code_number" class="reagent_number" readonly> <!--requiredの代わりにreadonly {{ request.form.get('code_number', '') }}は削除-->
+      <input type="number" name="code_number" id="code_number" class="reagent_number"> <!--requiredの代わりにreadonly {{ request.form.get('code_number', '') }}は削除-->
     </div>
 
     <!-- 棚番号の種類 -->
@@ -137,8 +137,20 @@
     <label>分子式:</label>
     <div id="elements-container">
       <div class="element-group">
-        <input type="text" name="elements[]" class="element_register" placeholder="元素 (例:C)">
-        <input type="number" name="counts[]" class="element_number_register" placeholder="数" min="1">
+        <input type="text" name="elements[]" class="element_register" value="C" readonly>
+        <input type="number" name="counts[]" class="element_number_register" placeholder="数(未入力可)" min="1">
+      </div>
+      <div class="element-group">
+        <input type="text" name="elements[]" class="element_register" value="H" readonly>
+        <input type="number" name="counts[]" class="element_number_register" placeholder="数(未入力可)" min="1">
+      </div>
+      <div class="element-group">
+        <input type="text" name="elements[]" class="element_register" value="N" readonly>
+        <input type="number" name="counts[]" class="element_number_register" placeholder="数(未入力可)" min="1">
+      </div>
+      <div class="element-group">
+        <input type="text" name="elements[]" class="element_register" value="O" readonly>
+        <input type="number" name="counts[]" class="element_number_register" placeholder="数(未入力可)" min="1">
       </div>
     </div>
     <button type="button" id="add-element-btn">元素を追加</button>
@@ -175,7 +187,7 @@
 
     <!-- 登録者名 -->
     <label for="registrant">登録者名:</label>
-    <input type="text" name="registrant" id="registrant" class="registrant" value="{{ request.form.get('registrant', '') }}">
+    <input type="text" name="registrant" id="registrant" class="registrant" value="{{ request.form.get('registrant', '') }}" placeholder="任意">
 
     <!-- 登録ボタン -->
     <div style="margin-top: 3px;">

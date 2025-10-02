@@ -1,6 +1,7 @@
 from functools import wraps
 from flask import session, redirect, url_for
 
+# デコレーター関数。ログイン済みでないと関数が使えないようになる。
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):

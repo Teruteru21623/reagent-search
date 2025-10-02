@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Register</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+
+    <h1>Edit</h1>
+
+    <form method="POST">
+        <!-- 試薬名 -->
+        <label for="name">試薬名:</label>
+        <input type="text" name="name" class="name" id="name" value="{{ reagent.name }}">
+
+        <!-- 試薬番号 -->
+        <label>試薬番号:</label>
+        <div class="code_number_group">
+        <select name="code_prefix" class="code_prefix" id="code_prefix">
+            <option value="">--選択--</option>
+            <option value="A" {% if reagent.code and reagent.code[0] == 'A' %}selected{% endif %}>A : 無機塩(主にNa塩)</option>
+            <option value="B" {% if reagent.code and reagent.code[0] == 'B' %}selected{% endif %}>B : 無機塩(主にK塩)</option>
+            <option value="C" {% if reagent.code and reagent.code[0] == 'C' %}selected{% endif %}>C : 無機塩(主にLi塩)</option>
+            <option value="D" {% if reagent.code and reagent.code[0] == 'D' %}selected{% endif %}>D : アルデヒド</option>
+            <option value="E" {% if reagent.code and reagent.code[0] == 'E' %}selected{% endif %}>E : ケトン</option>
+            <option value="F" {% if reagent.code and reagent.code[0] == 'F' %}selected{% endif %}>F : アルコール</option>
+            <option value="G" {% if reagent.code and reagent.code[0] == 'G' %}selected{% endif %}>G : フェノール</option>
+            <option value="H" {% if reagent.code and reagent.code[0] == 'H' %}selected{% endif %}>H : エーテル</option>
+            <option value="I" {% if reagent.code and reagent.code[0] == 'I' %}selected{% endif %}>I : エステル</option>
+            <option value="J" {% if reagent.code and reagent.code[0] == 'J' %}selected{% endif %}>J : 炭化水素</option>
+            <option value="K" {% if reagent.code and reagent.code[0] == 'K' %}selected{% endif %}>K : 有機塩</option>
+            <option value="L" {% if reagent.code and reagent.code[0] == 'L' %}selected{% endif %}>L : ハロゲン化物</option>
+            <option value="M" {% if reagent.code and reagent.code[0] == 'M' %}selected{% endif %}>M : 酸無水物</option>
+            <option value="N" {% if reagent.code and reagent.code[0] == 'N' %}selected{% endif %}>N : カルボン酸</option>
+            <option value="O" {% if reagent.code and reagent.code[0] == 'O' %}selected{% endif %}>O : アミン</option>
+            <option value="P" {% if reagent.code and reagent.code[0] == 'P' %}selected{% endif %}>P : アミド</option>
+            <option value="Q" {% if reagent.code and reagent.code[0] == 'Q' %}selected{% endif %}>Q : ピリジン</option>
+            <option value="R" {% if reagent.code and reagent.code[0] == 'R' %}selected{% endif %}>R : 含窒素化合物</option>
+            <option value="S" {% if reagent.code and reagent.code[0] == 'S' %}selected{% endif %}>S</option>
+            <option value="T" {% if reagent.code and reagent.code[0] == 'T' %}selected{% endif %}>T : 金属錯体</option>
+            <option value="U" {% if reagent.code and reagent.code[0] == 'U' %}selected{% endif %}>U : 金属ヒドリド</option>
+            <option value="V" {% if reagent.code and reagent.code[0] == 'V' %}selected{% endif %}>V : リン化合物</option>
+            <option value="W" {% if reagent.code and reagent.code[0] == 'W' %}selected{% endif %}>W : 硫黄化合物</option>
+            <option value="X" {% if reagent.code and reagent.code[0] == 'X' %}selected{% endif %}>X : ホウ素化合物</option>
+            <option value="Y" {% if reagent.code and reagent.code[0] == 'Y' %}selected{% endif %}>Y : ケイ素化合物</option>
+            <option value="Z" {% if reagent.code and reagent.code[0] == 'Z' %}selected{% endif %}>Z : その他</option>
+        </select>
+        <input type="number" name="code_number" id="code_number" class="reagent_number" value="{{ reagent.code[1:] if reagent.code and reagent.code|length>1 else '' }}"> <!--requiredの代わりにreadonly {{ request.form.get('code_number', '') }}は削除-->
+        </div>
+
+        <!-- 棚番号の種類 -->
+        {% set preset_options = ["劇物庫","毒物庫","冷蔵庫","冷凍庫","Oの棚","Pの棚","Qの棚",
+                                 "Rの棚","Tの棚","Vの棚","Wの棚","Xの棚","Yの棚","デシケーター","その他"] %}
+
+        {% if reagent.location and '-' in reagent.location %}
+            {% set location_type = 'numeric' %}
+        {% elif reagent.location in preset_options %}
+            {% set location_type = 'preset' %}
+        {% else %}
+            {% set location_type = 'custom' %}
+        {% endif %}
+
+        <!--棚番号の種類選択のラジオボタン-->
+        <label>棚番号の種類:</label>
+        <div class="radio-group">
+        <label>
+            <input type="radio" name="location_type" value="numeric"
+                {% if location_type == 'numeric' %}checked{% endif %}
+                onchange="toggleLocationFields()">
+            数字形式
+        </label>
+        <label>
+            <input type="radio" name="location_type" value="preset"
+                {% if location_type == 'preset' or location_type == 'custom' %}checked{% endif %}
+                onchange="toggleLocationFields()">
+            特定棚
+        </label>
+        </div>
+
+        <!-- 棚番号（数字） -->
+        <div id="numeric_location" {% if location_type != 'numeric' %}style="display:none"{% endif %}>
+            <label>棚番号:</label>
+            <div class="numeric_location_group">
+                {% set row = '' %}
+                {% set col = '' %}
+                {% if location_type == 'numeric' %}
+                    {% set row = reagent.location.split('-')[0] %}
+                    {% set col = reagent.location.split('-')[1] %}
+                {% endif %}
+                <input type="number" name="location_row" class="location_row" placeholder="番号" min="1" value="{{ row }}">
+                <span style="font-weight: bold;">-</span>
+                <input type="number" name="location_col" class="location_col" placeholder="番号" min="0" value="{{ col }}">
+            </div>
+        </div>
+  
+        <!-- 棚番号（指定棚） -->
+        <div id="preset_location_area" {% if location_type == 'numeric' %}style="display:none"{% endif %}>
+            <label for="shelf">棚番号（場所）:</label>
+            <select name="preset_location" id="shelf" class="shelf" onchange="toggleCustomLocation()">
+                <option value="">選択してください</option>
+                {% for opt in preset_options %}
+                    <option value="{{ opt }}" 
+                        {% if reagent.location == opt %}selected{% endif %}
+                        {% if location_type == 'custom' and opt == 'その他' %}selected{% endif %}>
+                        {{ opt }}
+                    </option>
+                {% endfor %}
+            </select>
+  
+            <!-- その他用の入力欄（最初は非表示） -->
+            <input type="text" id="custom_location" name="custom_location" class="custom_location"
+                placeholder="棚の名前"
+                {% if location_type == 'custom' %}
+                    value="{{ reagent.location }}" style="display:block"
+                {% else %}
+                    style="display:none"
+                {% endif %}>
+        </div>
+
+        <!-- 容量 -->
+        <label for="volume_label">容量:</label>
+        <div class="volume_group">
+            <input type="number" 
+                name="volume" 
+                id="volume_label" 
+                class="volume" 
+                min="0" 
+                placeholder="数" 
+                value="{{ volume_num }}">
+    
+            <select name="volume_unit" class="volume_unit">
+                <option value="g" {% if volume_unit == 'g' %}selected{% endif %}>g</option>
+                <option value="mL" {% if volume_unit == 'mL' %}selected{% endif %}>mL</option>
+            </select>
+        </div>
+
+        <label>分子式:</label>
+        <div id="elements-container">
+            {% set default_elements = ['C','H','N','O'] %}
+
+            {% for elem in default_elements %}
+            <div class="element-group">
+                <input type="text" name="elements[]" class="element_register" value="{{ elem }}" readonly>
+                <input type="number" name="counts[]" class="element_number_register"
+                    placeholder="数(未入力可)"
+                    min="1"
+                    value="{{ reagent.element_counts.get(elem, '') }}">
+            </div>
+            {% endfor %}
+
+            {% for elem, count in reagent.element_counts.items() %}
+                {% if elem not in default_elements %}
+                    <div class="element-group">
+                        <input type="text" name="elements[]" class="element_register" value="{{ elem }}">
+                        <input type="number" name="counts[]" class="element_number_register"
+                            placeholder="数(未入力可)"
+                            min="1"
+                            value="{{ count }}">
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <button type="button" id="add-element-btn">元素を追加</button>
+
+        <!-- 劇物or毒物 -->
+        <label>区分</label>
+        <div class="form-group">
+            <label>
+                <input type="radio" name="status" value="劇物"
+                {% if reagent.status == "劇物" %}checked{% endif %}> 劇物
+            </label>
+            <label>
+                <input type="radio" name="status" value="毒物"
+                {% if reagent.status == "毒物" %}checked{% endif %}> 毒物
+            </label>
+        </div>
+
+        <!-- 試薬会社 -->
+        <label for="company">試薬会社:</label>
+        <select name="company" id="company" class="company" onchange="toggleCustomCompany()">
+            <option value="TCI" {% if reagent.company == "TCI" %}selected{% endif %}>TCI</option>
+            <option value="Wako" {% if reagent.company == "Wako" %}selected{% endif %}>Wako</option>
+            <option value="Aldrich" {% if reagent.company == "Aldrich" %}selected{% endif %}>Aldrich</option>
+            <option value="その他" 
+                {% if reagent.company not in ["TCI", "Wako", "Aldrich"] %}selected{% endif %}>その他</option>
+        </select>
+
+        <!-- その他用の入力欄 -->
+        <input type="text" id="custom_company" name="custom_company" class="custom_company"
+            placeholder="試薬会社名"
+            {% if reagent.company not in ["TCI", "Wako", "Aldrich"] %}
+                value="{{ reagent.company }}" style="display:block"
+            {% else %}
+                style="display:none"
+            {% endif %}>
+
+        <!-- 登録者名 -->
+        <label for="registrant">登録者名:</label>
+        <input type="text" name="registrant" id="registrant" class="registrant" value="{{ reagent.registrant }}" placeholder="任意">
+
+        <!-- 絞り込み・ソート条件を hidden input に保持 -->
+        <input type="hidden" name="name_filter" value="{{ request.args.get('name', '') }}">
+        <input type="hidden" name="formula_filter" value="{{ request.args.get('formula', '') }}">
+        <input type="hidden" name="sort" value="{{ request.args.get('sort', 'name') }}">
+
+        <!-- 更新ボタン -->
+        <div style="margin-top: 3px;">
+            <input type="submit" value="更新">
+        </div>
+    </form>
+</body>
+
+<script>
+    //棚の種類の変更ボタンの処理
+    function toggleLocationFields() {
+        const type = document.querySelector('input[name="location_type"]:checked').value;
+        const numeric = document.getElementById("numeric_location")
+        const preset = document.getElementById("preset_location_area")
+
+        if (type === "numeric") {
+            numeric.style.display = "block";
+            preset.style.display = "none";
+        } else {
+            numeric.style.display = "none";
+            preset.style.display = "block";
+        }
+
+        toggleCustomLocation();
+    }
+
+    // 棚の種類でその他を選んだ時の挙動
+    function toggleCustomLocation() {
+        const shelf = document.getElementById("shelf");
+        const custom = document.getElementById("custom_location");
+        if (shelf.value === "その他") {
+            custom.style.display = "block";
+        } else {
+            custom.style.display = "none";
+        }
+    }
+
+    document.getElementById("add-element-btn").addEventListener("click", function() {
+        const container = document.getElementById("elements-container");
+        const div = document.createElement("div");
+        div.className = "element-group";
+
+        const elementInput = document.createElement("input");
+        elementInput.type = "text";
+        elementInput.name = "elements[]";
+        elementInput.className = "element_register"
+        elementInput.placeholder = "元素 (例:C)";
+
+        const countInput = document.createElement("input");
+        countInput.type = "number";
+        countInput.name = "counts[]";
+        countInput.className = "element_number_register"
+        countInput.placeholder = "数";
+        countInput.min = 1;
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.type = "button";
+        deleteBtn.textContent = "削除";
+        deleteBtn.className = "delete-element-btn";
+        deleteBtn.addEventListener("click", function() {
+            div.remove();
+            toggleDeleteButtons();
+        });
+
+        div.appendChild(elementInput);
+        div.appendChild(countInput);
+        div.appendChild(deleteBtn);
+
+        container.appendChild(div);
+
+        toggleDeleteButtons();
+    });
+
+    function toggleDeleteButtons() {
+        const groups = document.querySelectorAll(".element-group");
+        const defaultElements = ["C", "H", "N", "O"];
+
+        groups.forEach(group => {
+            const elemInput = group.querySelector(".element_register");
+            const deleteBtn = group.querySelector(".delete-element-btn");
+            if (!deleteBtn) return; // 新規に追加されたボタン以外はスキップ
+
+            // デフォルト元素は削除不可
+            if (defaultElements.includes(elemInput.value)) {
+                deleteBtn.style.display = "none";
+            } else {
+                deleteBtn.style.display = "inline-block";
+            }
+        });
+    }
+
+    // 初期表示の既存の非デフォルト元素にも削除ボタン追加
+    document.querySelectorAll(".element-group").forEach(group => {
+        const elemInput = group.querySelector(".element_register");
+        if (!elemInput) return;
+
+        const defaultElements = ["C", "H", "N", "O"];
+        const existingBtn = group.querySelector(".delete-element-btn");
+        if (!defaultElements.includes(elemInput.value) && !existingBtn) {
+            const deleteBtn = document.createElement("button");
+            deleteBtn.type = "button";
+            deleteBtn.textContent = "削除";
+            deleteBtn.className = "delete-element-btn";
+            deleteBtn.addEventListener("click", function() {
+                group.remove();
+                toggleDeleteButtons();
+            });
+            group.appendChild(deleteBtn);
+        }
+    });
+
+    toggleDeleteButtons(); // 初期状態のボタン表示制御
+
+    // ラジオボタンの再クリックで解除
+    let currentChecked = null;
+    document.querySelectorAll('input[name="status"]').forEach(radio => {
+    radio.addEventListener("click", function() {
+        if (currentChecked === this) {
+            this.checked = false;
+            currentChecked = null;
+        } else {
+            currentChecked = this;
+        }
+        });
+    });
+
+    // 試薬会社でその他を選んだ時のやつ
+    function toggleCustomCompany() {
+        const select = document.getElementById("company");
+        const customInput = document.getElementById("custom_company");
+        if (select.value === "その他") {
+            customInput.style.display = "block";
+        } else {
+            customInput.style.display = "none";
+        }
+    }
+
+    window.onload = function() {
+        toggleLocationFields();
+        toggleCustomLocation(); // 初期ロード時の整合性も取る
+        toggleCustomCompany();
+    };
+</script>

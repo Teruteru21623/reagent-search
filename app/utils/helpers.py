@@ -8,7 +8,7 @@ def format_formula(formula):
     if not isinstance(formula, str) or not formula.strip():
         return ""
 
-    return re.sub(r"([A-Z][a-z]*)(\d*)", lambda m: f"{m.group(1)}<sub>{m.group(2)}</sub>" if m.group(2) else m.group(1), formula)
+    return re.sub(r"([A-Z][a-z]*)(\d*)", lambda m: f"{m.group(1)}<sub>{m.group(2)}</sub>" if m.group(2) != "1" else m.group(1), formula)
 
 # SQLiteの正規表現フィルタを追加
 def regexp_filter(query: Query, field, pattern):
