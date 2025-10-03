@@ -1,0 +1,24 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+instance/
+
+# Virtual env
+venv/
+.env
+.venv/
+.Python
+
+# IDE
+.vscode
+.idea/
+
+# Others
+*.log
