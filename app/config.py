@@ -13,11 +13,16 @@ class Config:
     
     railwaysql = "postgresql://postgres:jYGbtOurqvVenPdQNCjOzccImjXOgBVs@postgres.railway.internal:5432/railway"
     devsql = "postgresql://reagent_user:Tenor623@localhost:5432/reagent_search_dev"
-    SQLALCHEMY_DATABASE_URI = devsql
+    SQLALCHEMY_DATABASE_URI = railwaysql
 
     # SQLAlchemyの変更通知機能を無効化（不要な警告を防ぐ）
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+    # DBスリープ復帰時に接続エラーを避ける
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        "pool_pre_ping": True
+    }
+    
     # ログインに使うユーザー名とパスワード
     USERNAME = "chem"
     PASSWORD = "yuki"
