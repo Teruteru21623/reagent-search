@@ -218,7 +218,11 @@ body {
   }
 
   .formula_table {
-    width: 50px;
+    width: 20px;
+  }
+
+  .volume_table {
+    width: 75px;
   }
 
   .result-container {

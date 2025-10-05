@@ -13,7 +13,8 @@ class Config:
     
     railwaysql = "postgresql://postgres:jYGbtOurqvVenPdQNCjOzccImjXOgBVs@postgres.railway.internal:5432/railway"
     devsql = "postgresql://reagent_user:Tenor623@localhost:5432/reagent_search_dev"
-    SQLALCHEMY_DATABASE_URI = railwaysql
+    #SQLALCHEMY_DATABASE_URI = railwaysql
+    SQLALCHEMY_DATABASE_URI = devsql
 
     # SQLAlchemyの変更通知機能を無効化（不要な警告を防ぐ）
     SQLALCHEMY_TRACK_MODIFICATIONS = False

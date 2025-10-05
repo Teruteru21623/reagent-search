@@ -171,6 +171,11 @@ def edit_reagent(reagent_id):
 
     # volume を分解
     volume_num, volume_unit = parse_volume(reagent.volume)
+
+    # hidden input から絞り込み・ソートを取得して redirect
+    name_filter = request.form.get("name", "")
+    formula_filter = request.form.get("formula", "")
+
     if request.method == "POST":
         errors = validate_register_form(request.form)
         if errors:
@@ -246,9 +251,7 @@ def edit_reagent(reagent_id):
         db.session.commit()
         flash("更新が完了しました")
 
-        # hidden input から絞り込み・ソートを取得して redirect
-        name_filter = request.form.get("name", "")
-        formula_filter = request.form.get("formula", "")
+        
 
         return redirect(url_for("main.results",
                                 name=name_filter,

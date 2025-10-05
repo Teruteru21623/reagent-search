@@ -27,7 +27,7 @@
           <th>試薬名</th>
           <th>棚番号</th>
           <th class="formula_table">分子式</th>
-          <th>容量</th>
+          <th class="volume_table">容量</th>
           <th>試薬会社</th>
           <th class="register_name_table">登録者名</th>
           <th class="control">操作</th>
@@ -72,11 +72,12 @@
           <td class="control">
             <!--編集ボタン-->
             <form action="{{ url_for('register.edit_reagent', reagent_id=reagent.id) }}" method="GET" class="inline-form">
-              <input type="hidden" name="name" value="{{ request.args.get('name', '') }}">
-              <input type="hidden" name="formula" value="{{ request.args.get('formula', '') }}">
-              <input type="hidden" name="sort" value="{{ request.args.get('sort', 'name') }}">
+              <input type="hidden" name="name" value="{{ name_filter }}">
+              <input type="hidden" name="formula" value="{{ formula_filter }}">
+              <input type="hidden" name="sort" value="{{ sort_filter }}">
               <button type="submit" class="edit-button">編集</button>
             </form>
+            
 
             <!--削除ボタン-->
             <form action="{{ url_for('register.delete_reagent', reagent_id=reagent.id) }}" method="POST" class="inline-form">
