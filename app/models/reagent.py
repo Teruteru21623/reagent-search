@@ -2,7 +2,7 @@ from . import db
 from sqlalchemy.dialects.postgresql import JSONB
 
 class Reagent(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.BigInteger, primary_key=True, autoincrement=True)
     name = db.Column(db.String(255), nullable=True) # 試薬名
     code = db.Column(db.String(50), nullable=True) # 試薬番号
     location = db.Column(db.String(100), nullable=True) # 棚番号
